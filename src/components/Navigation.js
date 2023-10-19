@@ -1,5 +1,6 @@
 import Navbar from 'react-bootstrap/Navbar';
 import { Button } from "react-bootstrap"
+import { ConnectWallet } from "@thirdweb-dev/react"
 import './App.css'
 
 import logoImage from "../images/icon_640.jpg"
@@ -18,7 +19,14 @@ const Navigation = () => {
 
       <Navbar.Toggle aria-controls="nav" />
       <Navbar.Collapse id="nav" className="justify-content-end">
-        <Button className='login-button'>Login to Vote</Button>
+        {/*<Button className='login-button'>Login to Vote</Button>*/}
+        <ConnectWallet
+          theme={"light"}
+          btnTitle={"Login"}
+          modalSize={"compact"}
+          welcomeScreen={{}}
+          modalTitleIconUrl={""}
+        />
       </Navbar.Collapse>
     </Navbar>
   )
