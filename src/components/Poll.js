@@ -1,5 +1,9 @@
 import React, { useState } from "react"
 import { Button } from "react-bootstrap"
+import { useContract } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
+
+import config from '../config.json';
 import './App.css'
 
 import catImage from "../images/cat_640.jpg"
@@ -10,15 +14,23 @@ import birdImage from "../images/parrot_640.jpg"
 import reptileImage from "../images/lizard_640.jpg"
 
 const initialVotes = {
-  Cat: 0,
-  Dog: 0,
-  Horse: 0,
-  Fish: 0,
-  Bird: 0,
-  Reptile: 0,
+  Cat: 1,
+  Dog: 1,
+  Horse: 1,
+  Fish: 1,
+  Bird: 1,
+  Reptile: 1,
 };
 
 function Poll() {
+  // get the connected wallet
+  const walletAddress = useAddress();
+  console.log(`connected wallet: ${walletAddress}`);
+
+  // get the contract
+  const { bestPetPoll, isLoading, error } = useContract("0xf6B35b22C9dB8caD52e537012AB569E71CB3e532");
+  console.log(bestPetPoll);
+
   const [votes, setVotes] = useState(initialVotes);
 
   const handleVote = (pet) => {
@@ -27,7 +39,7 @@ function Poll() {
       [pet]: prevVotes[pet] + 1,
     }));
   };
-
+ 
   return (
     <div className="voting-section">
       <div className="voting-column">
