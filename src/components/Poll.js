@@ -1,9 +1,13 @@
 import React, { useState } from "react"
 import { Button } from "react-bootstrap"
-import { useContract } from "@thirdweb-dev/react";
-import { useAddress } from "@thirdweb-dev/react";
+import { 
+  useAddress,
+  useContract,
+  useContractRead
+} from "@thirdweb-dev/react";
+//import { ethers } from 'ethers'
 
-import config from '../config.json';
+//import config from '../config.json';
 import './App.css'
 
 import catImage from "../images/cat_640.jpg"
@@ -13,7 +17,7 @@ import fishImage from "../images/fish_640.jpg"
 import birdImage from "../images/parrot_640.jpg"
 import reptileImage from "../images/lizard_640.jpg"
 
-const initialVotes = {
+const currentVotes = {
   Cat: 1,
   Dog: 1,
   Horse: 1,
@@ -22,16 +26,90 @@ const initialVotes = {
   Reptile: 1,
 };
 
+/******************************
+useContractVotes(_contract) {
+
+  var votes = {
+    Cat: 1,
+    Dog: 1,
+    Horse: 1,
+    Fish: 1,
+    Bird: 1,
+    Reptile: 1
+  };
+
+  const { data, isLoading, error } = useContractRead(
+    _contract,
+    "getCatVotes",
+  );
+  votes['Cat'] = data;
+
+  return [votes, isLoading, error];
+};
+***************************************/
+
 function Poll() {
+  const [votes, setVotes] = useState(currentVotes);
+  //const [isLoading, setIsLoading] = useState(true);
+
   // get the connected wallet
   const walletAddress = useAddress();
   console.log(`connected wallet: ${walletAddress}`);
 
   // get the contract
-  const { bestPetPoll, isLoading, error } = useContract("0xf6B35b22C9dB8caD52e537012AB569E71CB3e532");
-  console.log(bestPetPoll);
+  const { contract: bestPetPoll, isLoading, error } = useContract("0xf6B35b22C9dB8caD52e537012AB569E71CB3e532");
+  console.log("bestPetPoll contract:\n", bestPetPoll);
 
-  const [votes, setVotes] = useState(initialVotes);
+  /* get the current votes from the blockchain
+  const { data: catVotes, isLoading, error } = useContractRead(
+    bestPetPoll,
+    "getCatVotes",
+  );
+  console.log("catVotes: ", catVotes);
+  /*
+  const { data: dogVotes } = useContractRead(
+    bestPetPoll,
+    "getDogVotes",
+  );
+  const { data: horseVotes } = useContractRead(
+    bestPetPoll,
+    "getHorseVotes",
+  );
+  const { data: fishVotes } = useContractRead(
+    bestPetPoll,
+    "getFishVotes",
+  );
+  const { data: birdVotes } = useContractRead(
+    bestPetPoll,
+    "getBirdVotes",
+  );
+  const { data: reptileVotes } = useContractRead(
+    bestPetPoll,
+    "getReptileVotes",
+  );
+*/
+  //currentVotes['Cat'] = catVotes;
+  //setVotes(currentVotes);
+
+
+  /* get the current votes from the blockchain
+  returnData = useContractVotes(bestPetPoll);
+  votes = returnData[0];
+  isLoading = returnData[1];
+  error = returnData[2];
+
+
+  if (isLoading) {
+    console.log("contract still loading...");
+  }
+  else if (error) {
+    console.error("failed to get votes", error);
+  }
+  else {
+    console.log("votes:\n", votes);
+  }
+*/
+
 
   const handleVote = (pet) => {
     setVotes((prevVotes) => ({
@@ -39,7 +117,8 @@ function Poll() {
       [pet]: prevVotes[pet] + 1,
     }));
   };
- 
+
+
   return (
     <div className="voting-section">
       <div className="voting-column">
