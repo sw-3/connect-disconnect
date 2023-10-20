@@ -5,7 +5,7 @@ import {
   useContract,
   useContractRead
 } from "@thirdweb-dev/react";
-//import { ethers } from 'ethers'
+//import { ethers, BigNumber } from 'ethers'
 
 //import config from '../config.json';
 import './App.css'
@@ -17,6 +17,7 @@ import fishImage from "../images/fish_640.jpg"
 import birdImage from "../images/parrot_640.jpg"
 import reptileImage from "../images/lizard_640.jpg"
 
+// set an initial value for the vote counts
 const currentVotes = {
   Cat: 1,
   Dog: 1,
@@ -49,23 +50,38 @@ useContractVotes(_contract) {
 ***************************************/
 
 function Poll() {
+  var catVotes = 1;
+
   const [votes, setVotes] = useState(currentVotes);
   //const [isLoading, setIsLoading] = useState(true);
+  console.log("Initialized votes:\n", votes);
 
   // get the connected wallet
   const walletAddress = useAddress();
   console.log(`connected wallet: ${walletAddress}`);
 
   // get the contract
-  const { contract: bestPetPoll, isLoading, error } = useContract("0xf6B35b22C9dB8caD52e537012AB569E71CB3e532");
+  const { contract: bestPetPoll } = useContract("0xf6B35b22C9dB8caD52e537012AB569E71CB3e532");
   console.log("bestPetPoll contract:\n", bestPetPoll);
 
-  /* get the current votes from the blockchain
-  const { data: catVotes, isLoading, error } = useContractRead(
+  // get the current votes from the blockchain
+  const { data, isLoading, error } = useContractRead(
     bestPetPoll,
     "getCatVotes",
   );
+  if (data) {
+    catVotes = data.toNumber();
+  }
+
   console.log("catVotes: ", catVotes);
+  if (catVotes != votes['Cat']) {
+    console.log("ON-CHAIN CAT VOTES CHANGED! SETTING STATE for CAT Votes!!")
+    setVotes((prevVotes) => ({
+      ...prevVotes,
+      ['Cat']: catVotes,
+    }));
+  }
+
   /*
   const { data: dogVotes } = useContractRead(
     bestPetPoll,
@@ -88,9 +104,9 @@ function Poll() {
     "getReptileVotes",
   );
 */
-  //currentVotes['Cat'] = catVotes;
-  //setVotes(currentVotes);
-
+//  currentVotes['Cat'] = catVotes;
+//  setVotes(currentVotes);
+  console.log("Current vote counts:\n", votes);
 
   /* get the current votes from the blockchain
   returnData = useContractVotes(bestPetPoll);
