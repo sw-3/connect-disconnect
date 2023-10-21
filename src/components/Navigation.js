@@ -22,7 +22,7 @@ const Navigation = () => {
         {/*<Button className='login-button'>Login to Vote</Button>*/}
         <ConnectWallet
           theme={"light"}
-          btnTitle={"Login"}
+          btnTitle={"Connect"}
           modalSize={"compact"}
           welcomeScreen={{}}
           modalTitleIconUrl={""}
