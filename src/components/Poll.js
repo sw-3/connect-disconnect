@@ -5,13 +5,12 @@ import {
   useContract,
   useContractRead
 } from "@thirdweb-dev/react";
-//import { ethers, BigNumber } from 'ethers'
 
-//import config from '../config.json';
+import config from '../config.json';
 import './App.css'
 
 import catImage from "../images/cat_640.jpg"
-import dogImage from "../images/puppy_640.jpg"
+import dogImage from "../images/dog_640.jpg"
 import horseImage from "../images/horse_640.jpg"
 import fishImage from "../images/fish_640.jpg"
 import birdImage from "../images/parrot_640.jpg"
@@ -19,113 +18,129 @@ import reptileImage from "../images/lizard_640.jpg"
 
 // set an initial value for the vote counts
 const currentVotes = {
-  Cat: 1,
-  Dog: 1,
-  Horse: 1,
-  Fish: 1,
-  Bird: 1,
-  Reptile: 1,
+  Cat: 0,
+  Dog: 0,
+  Horse: 0,
+  Fish: 0,
+  Bird: 0,
+  Reptile: 0,
 };
-
-/******************************
-useContractVotes(_contract) {
-
-  var votes = {
-    Cat: 1,
-    Dog: 1,
-    Horse: 1,
-    Fish: 1,
-    Bird: 1,
-    Reptile: 1
-  };
-
-  const { data, isLoading, error } = useContractRead(
-    _contract,
-    "getCatVotes",
-  );
-  votes['Cat'] = data;
-
-  return [votes, isLoading, error];
-};
-***************************************/
 
 function Poll() {
-  var catVotes = 1;
 
   const [votes, setVotes] = useState(currentVotes);
-  //const [isLoading, setIsLoading] = useState(true);
-  console.log("Initialized votes:\n", votes);
 
-  // get the connected wallet
+  var updatedVotes = votes;
+  var votesChanged = false;
+
+  // get the connected smart wallet address
   const walletAddress = useAddress();
-  console.log(`connected wallet: ${walletAddress}`);
 
-  // get the contract
-  const { contract: bestPetPoll } = useContract("0xf6B35b22C9dB8caD52e537012AB569E71CB3e532");
-  console.log("bestPetPoll contract:\n", bestPetPoll);
+  // get the Best Pet Poll smart contract
+  const chainId = '80001'
+  const { contract: bestPetPoll, isLoading, error } =
+    useContract(config[chainId].bestPetPoll.address);
+  //console.log(bestPetPoll);
 
-  // get the current votes from the blockchain
-  const { data, isLoading, error } = useContractRead(
+  //
+  //------------------------------------------------------------------------//
+  //   Get the current votes from the blockchain                            //
+  //------------------------------------------------------------------------//
+
+  // get Cat Votes
+  const { data: catData } = useContractRead(
     bestPetPoll,
     "getCatVotes",
   );
-  if (data) {
-    catVotes = data.toNumber();
+  if (catData) {
+    const catVotes = catData.toNumber();
+    //console.log("Got Cat Votes from blockchain: ", catVotes)
+    if (catVotes !== votes['Cat']) {
+      updatedVotes['Cat'] = catVotes;
+      votesChanged = true;
+    }
   }
 
-  console.log("catVotes: ", catVotes);
-  if (catVotes != votes['Cat']) {
-    console.log("ON-CHAIN CAT VOTES CHANGED! SETTING STATE for CAT Votes!!")
-    setVotes((prevVotes) => ({
-      ...prevVotes,
-      ['Cat']: catVotes,
-    }));
-  }
-
-  /*
-  const { data: dogVotes } = useContractRead(
+  // get Dog votes
+  const { data: dogData } = useContractRead(
     bestPetPoll,
     "getDogVotes",
   );
-  const { data: horseVotes } = useContractRead(
+  if (dogData) {
+    const dogVotes = dogData.toNumber();
+    //console.log("Got Dog Votes from blockchain: ", dogVotes)
+    if (dogVotes !== votes['Dog']) {
+      updatedVotes['Dog'] = dogVotes;
+      votesChanged = true;
+    }
+  }
+
+  // get Horse votes
+  const { data: horseData } = useContractRead(
     bestPetPoll,
     "getHorseVotes",
   );
-  const { data: fishVotes } = useContractRead(
+  if (horseData) {
+    const horseVotes = horseData.toNumber();
+    //console.log("Got Horse Votes from blockchain: ", horseVotes)
+    if (horseVotes !== votes['Horse']) {
+      updatedVotes['Horse'] = horseVotes;
+      votesChanged = true;
+    }
+  }
+
+  // get Fish votes
+  const { data: fishData } = useContractRead(
     bestPetPoll,
     "getFishVotes",
   );
-  const { data: birdVotes } = useContractRead(
+  if (fishData) {
+    const fishVotes = fishData.toNumber();
+    //console.log("Got Fish Votes from blockchain: ", fishVotes)
+    if (fishVotes !== votes['Fish']) {
+      updatedVotes['Fish'] = fishVotes;
+      votesChanged = true;
+    }
+  }
+
+  // get Bird votes
+  const { data: birdData } = useContractRead(
     bestPetPoll,
     "getBirdVotes",
   );
-  const { data: reptileVotes } = useContractRead(
+  if (birdData) {
+    const birdVotes = birdData.toNumber();
+    //console.log("Got Bird Votes from blockchain: ", birdVotes)
+    if (birdVotes !== votes['Bird']) {
+      updatedVotes['Bird'] = birdVotes;
+      votesChanged = true;
+    }
+  }
+
+  // get Reptile votes
+  const { data: reptileData } = useContractRead(
     bestPetPoll,
     "getReptileVotes",
   );
-*/
-//  currentVotes['Cat'] = catVotes;
-//  setVotes(currentVotes);
-  console.log("Current vote counts:\n", votes);
-
-  /* get the current votes from the blockchain
-  returnData = useContractVotes(bestPetPoll);
-  votes = returnData[0];
-  isLoading = returnData[1];
-  error = returnData[2];
-
-
-  if (isLoading) {
-    console.log("contract still loading...");
+  if (reptileData) {
+    const reptileVotes = reptileData.toNumber();
+    //console.log("Got Reptile Votes from blockchain: ", reptileVotes)
+    if (reptileVotes !== votes['Reptile']) {
+      updatedVotes['Reptile'] = reptileVotes;
+      votesChanged = true;
+    }
   }
-  else if (error) {
-    console.error("failed to get votes", error);
-  }
-  else {
-    console.log("votes:\n", votes);
-  }
-*/
 
+  //
+  //------------------------------------------------------------------------//
+  //   If any votes changed, update the App votes state                     //
+  //------------------------------------------------------------------------//
+  //
+  if (votesChanged) {
+    console.log("ON-CHAIN VOTES CHANGED: setting state for votes.");
+    setVotes(updatedVotes);
+    votesChanged = false;
+  }
 
   const handleVote = (pet) => {
     setVotes((prevVotes) => ({
@@ -133,7 +148,6 @@ function Poll() {
       [pet]: prevVotes[pet] + 1,
     }));
   };
-
 
   return (
     <div className="voting-section">
