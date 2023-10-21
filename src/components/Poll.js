@@ -37,6 +37,31 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
     "voteForCat",
   );
 
+  const { mutateAsync: voteForDogAsync } = useContractWrite(
+    bestPetPoll,
+    "voteForDog",
+  );
+
+  const { mutateAsync: voteForHorseAsync } = useContractWrite(
+    bestPetPoll,
+    "voteForHorse",
+  );
+
+  const { mutateAsync: voteForFishAsync } = useContractWrite(
+    bestPetPoll,
+    "voteForFish",
+  );
+
+  const { mutateAsync: voteForBirdAsync } = useContractWrite(
+    bestPetPoll,
+    "voteForBird",
+  );
+
+  const { mutateAsync: voteForReptileAsync } = useContractWrite(
+    bestPetPoll,
+    "voteForReptile",
+  );
+
   //
   //------------------------------------------------------------------------//
   //   Get the current votes from the blockchain                            //
@@ -148,19 +173,19 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
       voteForCatAsync({ args: [] });
       break;
     case 'Dog':
-
+      voteForDogAsync({ args: [] });
       break;
     case 'Horse':
-
+      voteForHorseAsync({ args: [] });
       break;
     case 'Fish':
-
+      voteForFishAsync({ args: [] });
       break;
     case 'Bird':
-
+      voteForBirdAsync({ args: [] });
       break;
     case 'Reptile':
-
+      voteForReptileAsync({ args: [] });
       break;
     }
   };
