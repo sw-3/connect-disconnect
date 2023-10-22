@@ -14,6 +14,7 @@ import config from '../config.json';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState(null);
+  const [bestPetPollAddr, setBestPetPollAddr] = useState(null);
   const [bestPetPoll, setBestPetPoll] = useState(null);
 
   const chainId = '80001'
@@ -29,8 +30,11 @@ function App() {
   }
 
   // get the Best Pet Poll smart contract
-  const { contract, isLoading } =
-    useContract(config[chainId].bestPetPoll.address);
+  if (!bestPetPollAddr) {
+    setBestPetPollAddr(config[chainId].bestPetPoll.address);
+  }
+
+  const { contract, isLoading } = useContract(bestPetPollAddr);
   if (!isLoading && (contract !== bestPetPoll)) {
     setBestPetPoll(contract);
   }
@@ -38,12 +42,14 @@ function App() {
   return (
     <Container>
       <Navigation />
+
       <Header
         walletAddress={walletAddress}
       />
 
       <Poll 
         walletAddress={walletAddress}
+        bestPetPollAddr={bestPetPollAddr}
         bestPetPoll={bestPetPoll}
       />
 

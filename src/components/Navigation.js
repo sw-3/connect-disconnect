@@ -1,5 +1,4 @@
 import Navbar from 'react-bootstrap/Navbar';
-import { Button } from "react-bootstrap"
 import { ConnectWallet } from "@thirdweb-dev/react"
 import './App.css'
 
@@ -19,7 +18,6 @@ const Navigation = () => {
 
       <Navbar.Toggle aria-controls="nav" />
       <Navbar.Collapse id="nav" className="justify-content-end">
-        {/*<Button className='login-button'>Login to Vote</Button>*/}
         <ConnectWallet
           theme={"light"}
           btnTitle={"Connect"}

@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import { Button } from "react-bootstrap"
 import { 
   useContractRead,
-  useContractWrite
+  useContractWrite,
+  Web3Button
 } from "@thirdweb-dev/react";
 
 import './App.css'
@@ -24,7 +24,7 @@ const currentVotes = {
   Reptile: 0,
 };
 
-const Poll = ({ walletAddress, bestPetPoll }) => {
+const Poll = ({ walletAddress, bestPetPollAddr, bestPetPoll }) => {
 
   const [votes, setVotes] = useState(currentVotes);
 
@@ -74,7 +74,6 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
   );
   if (catData) {
     const catVotes = catData.toNumber();
-    //console.log("Got Cat Votes from blockchain: ", catVotes)
     if (catVotes !== votes['Cat']) {
       updatedVotes['Cat'] = catVotes;
       votesChanged = true;
@@ -88,7 +87,6 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
   );
   if (dogData) {
     const dogVotes = dogData.toNumber();
-    //console.log("Got Dog Votes from blockchain: ", dogVotes)
     if (dogVotes !== votes['Dog']) {
       updatedVotes['Dog'] = dogVotes;
       votesChanged = true;
@@ -102,7 +100,6 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
   );
   if (horseData) {
     const horseVotes = horseData.toNumber();
-    //console.log("Got Horse Votes from blockchain: ", horseVotes)
     if (horseVotes !== votes['Horse']) {
       updatedVotes['Horse'] = horseVotes;
       votesChanged = true;
@@ -116,7 +113,6 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
   );
   if (fishData) {
     const fishVotes = fishData.toNumber();
-    //console.log("Got Fish Votes from blockchain: ", fishVotes)
     if (fishVotes !== votes['Fish']) {
       updatedVotes['Fish'] = fishVotes;
       votesChanged = true;
@@ -130,7 +126,6 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
   );
   if (birdData) {
     const birdVotes = birdData.toNumber();
-    //console.log("Got Bird Votes from blockchain: ", birdVotes)
     if (birdVotes !== votes['Bird']) {
       updatedVotes['Bird'] = birdVotes;
       votesChanged = true;
@@ -144,7 +139,6 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
   );
   if (reptileData) {
     const reptileVotes = reptileData.toNumber();
-    //console.log("Got Reptile Votes from blockchain: ", reptileVotes)
     if (reptileVotes !== votes['Reptile']) {
       updatedVotes['Reptile'] = reptileVotes;
       votesChanged = true;
@@ -157,38 +151,9 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
   //------------------------------------------------------------------------//
   //
   if (votesChanged) {
-    console.log("ON-CHAIN VOTES CHANGED: setting state for votes.");
     setVotes(updatedVotes);
     votesChanged = false;
   }
-
-
-// SDW:  1) Need to handle the wallet connection properly ... No votes can be made
-//       before the wallet is connected ... so use walletAddress ? below for it.
-//       2) Also need the contract to be connected, so the isLoading flag
-
-  const handleVote = (pet) => {
-    switch(pet) {
-    case 'Cat':
-      voteForCatAsync({ args: [] });
-      break;
-    case 'Dog':
-      voteForDogAsync({ args: [] });
-      break;
-    case 'Horse':
-      voteForHorseAsync({ args: [] });
-      break;
-    case 'Fish':
-      voteForFishAsync({ args: [] });
-      break;
-    case 'Bird':
-      voteForBirdAsync({ args: [] });
-      break;
-    case 'Reptile':
-      voteForReptileAsync({ args: [] });
-      break;
-    }
-  };
 
   return (
     <div className="voting-section">
@@ -197,9 +162,12 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
           <h3>Cat Votes: {votes['Cat']}</h3>
           <img src={catImage} alt={`Cat logo`} className="pet-logo" />
           {walletAddress ? (
-            <Button variant="primary" size="lg" onClick={() => handleVote('Cat')}>
+            <Web3Button
+              contractAddress={bestPetPollAddr}
+              action={() => voteForCatAsync({ args: [] })}
+            >
               Vote for Cat
-            </Button>
+            </Web3Button>
           ) : (
             <div></div>
           )}
@@ -208,9 +176,12 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
           <h3>Dog Votes: {votes['Dog']}</h3>
           <img src={dogImage} alt={`Dog logo`} className="pet-logo" />
           {walletAddress ? (
-            <Button variant="primary" size="lg" onClick={() => handleVote('Dog')}>
+            <Web3Button
+              contractAddress={bestPetPollAddr}
+              action={() => voteForDogAsync({ args: [] })}
+            >
               Vote for Dog
-            </Button>
+            </Web3Button>
           ) : (
             <div></div>
           )}
@@ -219,9 +190,12 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
           <h3>Horse Votes: {votes['Horse']}</h3>
           <img src={horseImage} alt={`Horse logo`} className="pet-logo" />
           {walletAddress ? (
-            <Button variant="primary" size="lg" onClick={() => handleVote('Horse')}>
+            <Web3Button
+              contractAddress={bestPetPollAddr}
+              action={() => voteForHorseAsync({ args: [] })}
+            >
               Vote for Horse
-            </Button>
+            </Web3Button>
           ) : (
             <div></div>
           )}
@@ -232,9 +206,12 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
           <h3>Fish Votes: {votes['Fish']}</h3>
           <img src={fishImage} alt={`Fish logo`} className="pet-logo" />
           {walletAddress ? (
-            <Button variant="primary" size="lg" onClick={() => handleVote('Fish')}>
+            <Web3Button
+              contractAddress={bestPetPollAddr}
+              action={() => voteForFishAsync({ args: [] })}
+            >
               Vote for Fish
-            </Button>
+            </Web3Button>
           ) : (
             <div></div>
           )}
@@ -243,9 +220,12 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
           <h3>Bird Votes: {votes['Bird']}</h3>
           <img src={birdImage} alt={`Bird logo`} className="pet-logo" />
           {walletAddress ? (
-            <Button variant="primary" size="lg" onClick={() => handleVote('Bird')}>
+            <Web3Button
+              contractAddress={bestPetPollAddr}
+              action={() => voteForBirdAsync({ args: [] })}
+            >
               Vote for Bird
-            </Button>
+            </Web3Button>
           ) : (
             <div></div>
           )}
@@ -254,9 +234,12 @@ const Poll = ({ walletAddress, bestPetPoll }) => {
           <h3>Reptile Votes: {votes['Reptile']}</h3>
           <img src={reptileImage} alt={`Reptile logo`} className="pet-logo" />
           {walletAddress ? (
-            <Button variant="primary" size="lg" onClick={() => handleVote('Reptile')}>
+            <Web3Button
+              contractAddress={bestPetPollAddr}
+              action={() => voteForReptileAsync({ args: [] })}
+            >
               Vote for Reptile
-            </Button>
+            </Web3Button>
           ) : (
             <div></div>
           )}
