@@ -13,8 +13,12 @@ import config from '../config.json';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState(null);
-  const [bestPetPollAddr, setBestPetPollAddr] = useState(null);
-  const [bestPetPoll, setBestPetPoll] = useState(null);
+
+/* these state variables hold an on-chain contract to interact with
+ *
+ *  const [contractAddr, setContractAddr] = useState(null);
+ *  const [onChainContract, setOnChainContract] = useState(null);
+*/
 
   const chainId = '80001'
 
@@ -42,15 +46,21 @@ function App() {
     }
   }
 
-  // get the Best Pet Poll smart contract
-  if (!bestPetPollAddr) {
-    setBestPetPollAddr(config[chainId].bestPetPoll.address);
+/*
+  //-------------------------------------------------------------------------//
+  //---   Get the on-chain smart contract this app uses                   ---//
+  //-------------------------------------------------------------------------//
+  //
+  // first, get the contract's address from the config.json file
+  if (!contractAddr) {
+    setContractAddr(config[chainId].contractName.contractAddress);
   }
-
-  const { contract, isLoading } = useContract(bestPetPollAddr);
-  if (!isLoading && (contract !== bestPetPoll)) {
-    setBestPetPoll(contract);
+  // next, get the on-chain contract
+  const { contract, isLoading } = useContract(contractAddr);
+  if (!isLoading && (contract !== onChainContract)) {
+    setOnChainContract(contract);
   }
+*/
 
   return (
     <Container>
