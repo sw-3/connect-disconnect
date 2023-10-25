@@ -3,12 +3,11 @@ import { Container } from "react-bootstrap";
 import { 
   useAddress,
   useContract,
+  useConnectionStatus
 } from "@thirdweb-dev/react";
 
 import Navigation from "./Navigation";
 import Header from "./Header";
-import Poll from "./Poll";
-import Footer from "./Footer";
 
 import config from '../config.json';
 
@@ -23,10 +22,24 @@ function App() {
   //---   Get connected to the blockchain first                           ---//
   //-------------------------------------------------------------------------//
 
+  // get the connection status
+  const connectionStatus = useConnectionStatus();
+
   // get the connected smart wallet address
   const address = useAddress();
-  if (address && (address !== walletAddress)) {
+
+  // if the connected address changes, set the Wallet Address in the state.
+  if ((typeof address === "string") && (address !== walletAddress)) {
     setWalletAddress(address);
+  }
+
+  // if the connected address is undefined and connection status is disconnected
+  //    make sure to unset the wallet address in the React state
+  if ((typeof address === "undefined") && (connectionStatus === "disconnected")) {
+
+    if (walletAddress) {
+      setWalletAddress(null);
+    }
   }
 
   // get the Best Pet Poll smart contract
@@ -41,19 +54,13 @@ function App() {
 
   return (
     <Container>
-      <Navigation />
+      <Navigation
+        walletAddress={walletAddress}
+      />
 
       <Header
         walletAddress={walletAddress}
       />
-
-      <Poll 
-        walletAddress={walletAddress}
-        bestPetPollAddr={bestPetPollAddr}
-        bestPetPoll={bestPetPoll}
-      />
-
-      <Footer />
     </Container>
   )
 }
