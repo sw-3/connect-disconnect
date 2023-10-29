@@ -1,6 +1,9 @@
 {
-  "name": "best-pet-poll",
+  "name": "connect-disconnect",
   "version": "0.1.0",
+  "description": "Demo app using thirdweb's Connect feature for Account Abstraction.",
+  "author": "ScottW3 (https://github.com/sw-3)",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
